@@ -14,10 +14,6 @@
     "express": "^4.15.2",
     "faker": "^4.1.0"
   },
-  "devDependencies": {
-    "request": "^2.81.0",
-    "tape": "^4.7.0"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ilie05/server-api.git"
