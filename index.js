@@ -1,13 +1,13 @@
 
 const PORT = process.env.PORT || 5000;
 
-var express = require('express');
-var app = express();
+let express = require('express');
+let app = express();
 
 // This responds with "Hello World" on the homepage
 app.get('/', function (req, res) {
   console.log("Got a GET request for the homepage");
-  res.send('Hello GET');
+  res.send('Hello GET GET');
 });
 
 // This responds a POST request for the homepage
@@ -34,9 +34,9 @@ app.get('/ab*cd', function(req, res) {
   res.send('Page Pattern Match');
 });
 
-var server = app.listen(PORT, function () {
-  var host = server.address().address;
-  var port = server.address().port;
+let server = app.listen(PORT, function () {
+  let host = server.address().address;
+  let port = server.address().port;
 
   console.log("Example app listening at http://%s:%s", host, port)
 });
