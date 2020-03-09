@@ -1,14 +1,18 @@
-
-const PORT = process.env.PORT || 5000;
-
 let express = require('express');
 let app = express();
+let faker = require('faker');
+const PORT = process.env.PORT || 5000;
 
-// This responds with "Hello World" on the homepage
+
+let randomName = faker.name.findName(); // Rowan Nikolaus
+let randomEmail = faker.internet.email(); // Kassandra.Haley@erich.biz
+let randomCard = faker.helpers.createCard(); // random contact card containing many properties
+
 app.get('/', function (req, res) {
   console.log("Got a GET request for the homepage");
-  res.send('First GET');
+  res.json({randomName, randomEmail, randomCard});
 });
+
 
 // This responds a POST request for the homepage
 app.post('/', function (req, res) {
