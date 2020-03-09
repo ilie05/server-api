@@ -1,6 +1,7 @@
 let express = require('express');
-let app = express();
 let faker = require('faker');
+
+let app = express();
 const PORT = process.env.PORT || 5000;
 
 
