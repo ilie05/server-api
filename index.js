@@ -7,19 +7,13 @@ let app = express();
 // This responds with "Hello World" on the homepage
 app.get('/', function (req, res) {
   console.log("Got a GET request for the homepage");
-  res.send('Hello GET GET');
+  res.send('Hello GET GET...');
 });
 
 // This responds a POST request for the homepage
 app.post('/', function (req, res) {
   console.log("Got a POST request for the homepage");
   res.send('Hello POST');
-});
-
-// This responds a DELETE request for the /del_user page.
-app.delete('/del_user', function (req, res) {
-  console.log("Got a DELETE request for /del_user");
-  res.send('Hello DELETE');
 });
 
 // This responds a GET request for the /list_user page.
