@@ -7,7 +7,7 @@ let app = express();
 // This responds with "Hello World" on the homepage
 app.get('/', function (req, res) {
   console.log("Got a GET request for the homepage");
-  res.send('Hello GET GET...xcx');
+  res.send('Hello GET ...');
 });
 
 // This responds a POST request for the homepage
