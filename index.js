@@ -13,13 +13,13 @@ let fileContent;
 //     .catch(error => console.log(error));
 // });
 
+apiReader.readFile('validCardTicketsDb').then(data => {
+  fileContent = JSON.parse(data);
+});
+
 app.get('/', function (req, res) {
   console.log("Got a GET request for the homepage");
   res.json(fileContent);
-});
-
-apiReader.readFile('validCardTicketsDb').then(data => {
-  fileContent = JSON.parse(data);
 });
 
 
