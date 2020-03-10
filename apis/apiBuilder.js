@@ -2,7 +2,7 @@ let fs = require('fs');
 const util = require('util');
 let faker = require('faker');
 
-const LIMIT = 20;
+const LIMIT = 1000;
 const dbDir = 'db';
 
 module.exports = {
@@ -33,7 +33,6 @@ let builders = {
             let spaceValidity = faker.random.number();
             let zoneName = faker.address.streetName();
             let status = faker.random.number({min: 0, max: 9});
-            //let randomCard = faker.helpers.createCard(); // random contact card containing many properties
 
             validCardTickets.push({
                 cardSRN,
@@ -56,7 +55,7 @@ let builders = {
         }
 
         const writeFile = util.promisify(fs.writeFile);
-        return writeFile(filename, JSON.stringify({validCardTickets}));
+        return writeFile(filename, JSON.stringify([...validCardTickets]));
     },
     anotherApi: function () {
         return new Promise((resolve, reject) => {

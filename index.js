@@ -2,10 +2,10 @@ let express = require('express');
 let apiReader = require('./apis/apiReader');
 
 let app = express();
+app.use(express.json());
 const PORT = process.env.PORT || 5000;
 
 let fileContent;
-
 
 apiReader.readFile('validCardTicketsDb').then(data => {
   fileContent = JSON.parse(data);
@@ -16,11 +16,11 @@ app.get('/', function (req, res) {
   res.json(fileContent);
 });
 
-
-// This responds a POST request for the homepage
-app.post('/', function (req, res) {
+app.post('/validCardTickets', function (req, res) {
   console.log("Got a POST request for the homepage");
-  res.send('Hello POST');
+  let {cardSRN, Provider} = req.body;
+  let arr = fileContent.filter(obj => obj.cardSRN == cardSRN);
+  res.json(arr);
 });
 
 // This responds a GET request for the /list_user page.
