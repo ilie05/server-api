@@ -1,17 +1,44 @@
 let express = require('express');
 let faker = require('faker');
+let fs = require('fs');
 
 let app = express();
 const PORT = process.env.PORT || 5000;
+const LIMIT = 1000;
 
+let validCardTickets = [];
 
-let randomName = faker.name.findName(); // Rowan Nikolaus
-let randomEmail = faker.internet.email(); // Kassandra.Haley@erich.biz
-let randomCard = faker.helpers.createCard(); // random contact card containing many properties
+for (let index = 0; index < LIMIT; index++) {
+
+  let cardSRN = faker.random.uuid();
+  let tariff = faker.random.number({min: 5, max: 200});
+  let tariffName = faker.random.word();
+  let ticketProvider = faker.random.number();
+  let ticketType = faker.random.number({min: 10, max: 99});
+  let validFrom = new Date(faker.date.past()).getTime() / 1000 | 0;
+  let validTo = new Date(faker.date.future()).getTime() / 1000 | 0;
+  let spaceValidity = faker.random.number();
+  let zoneName = faker.address.streetName();
+  let status = faker.random.number({min: 0, max: 9});
+//let randomCard = faker.helpers.createCard(); // random contact card containing many properties
+
+  validCardTickets.push({
+    cardSRN,
+    tariff,
+    tariffName,
+    ticketProvider,
+    ticketType,
+    validFrom,
+    validTo,
+    spaceValidity,
+    zoneName,
+    status
+  });
+}
 
 app.get('/', function (req, res) {
   console.log("Got a GET request for the homepage");
-  res.json({randomName, randomEmail, randomCard});
+  res.json(validCardTickets);
 });
 
 
