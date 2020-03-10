@@ -2,7 +2,7 @@ let fs = require('fs');
 const util = require('util');
 let faker = require('faker');
 
-const LIMIT = 1000;
+const LIMIT = 20;
 const dbDir = 'db';
 
 module.exports = {
