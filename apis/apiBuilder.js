@@ -46,7 +46,12 @@ let builders = {
             });
         }
         const filename = 'db/validCardTicketsDb.json';
-        fs.unlinkSync(filename);
+        try{
+            fs.unlinkSync(filename);
+        }catch (e) {
+            //console.log(e);
+        }
+
         const writeFile = util.promisify(fs.writeFile);
         return writeFile(filename, JSON.stringify({validCardTickets}));
     },
