@@ -3,9 +3,12 @@ const util = require('util');
 let faker = require('faker');
 
 const LIMIT = 1000;
+const dbDir = 'db';
 
 module.exports = {
     createDb: function () {
+        init();
+
         let promises = [];
 
         promises.push(builders.validCardTickets());
@@ -45,7 +48,7 @@ let builders = {
                 status
             });
         }
-        const filename = 'db/validCardTicketsDb.json';
+        const filename = dbDir + '/validCardTicketsDb.json';
         try{
             fs.unlinkSync(filename);
         }catch (e) {
@@ -63,5 +66,11 @@ let builders = {
         });
     }
 };
+
+function init(){
+    if (!fs.existsSync(dbDir)){
+        fs.mkdirSync(dbDir);
+    }
+}
 
 module.exports.createDb();
