@@ -16,11 +16,9 @@ apiReader.readFile('allowedTicketProvidersDb').then(data => {
 
 
 app.get('/', function (req, res) {
-  apiReader.readFile('validCardTicketsDb').then(data => {
-    fileContent = JSON.parse(data);
-  });
+
   console.log("Got a GET request for the homepage");
-  res.json(validCardTicketsDb);
+  res.json(validCardTickets);
 });
 
 app.post('/validCardTickets', function (req, res) {
