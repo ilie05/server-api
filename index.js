@@ -5,9 +5,13 @@ let apiReader = require('./apis/apiReader');
 let app = express();
 const PORT = process.env.PORT || 5000;
 
-// apiBuilder.createDb();
 let fileContent;
-apiReader.readFile('validCardTicketsDb').then(data => {fileContent = JSON.parse(data)});
+apiBuilder.createDb().then(() => {
+  apiReader.readFile('validCardTicketsDb').then(data => {
+    fileContent = JSON.parse(data);
+  })
+    .catch(error => console.log(error));
+});
 
 app.get('/', function (req, res) {
   console.log("Got a GET request for the homepage");

@@ -1,12 +1,17 @@
 let fs = require('fs');
+const util = require('util');
 let faker = require('faker');
 
 const LIMIT = 1000;
 
 module.exports = {
     createDb: function () {
-        builders.validCardTickets();
-        builders.anotherApi();
+        let promises = [];
+
+        promises.push(builders.validCardTickets());
+        promises.push(builders.anotherApi());
+
+        return Promise.all(promises);
     }
 };
 
@@ -40,10 +45,17 @@ let builders = {
                 status
             });
         }
-        fs.writeFile('db/validCardTicketsDb.json',JSON.stringify({validCardTickets}), 'utf8', () => {});
+        const filename = 'db/validCardTicketsDb.json';
+        fs.unlinkSync(filename);
+        const writeFile = util.promisify(fs.writeFile);
+        return writeFile(filename, JSON.stringify({validCardTickets}));
     },
     anotherApi: function () {
-        // whatever
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve("foo");
+            }, 1000);
+        });
     }
 };
 
