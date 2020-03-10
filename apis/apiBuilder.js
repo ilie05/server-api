@@ -12,13 +12,30 @@ module.exports = {
         let promises = [];
 
         promises.push(builders.validCardTickets());
-        promises.push(builders.anotherApi());
+        promises.push(builders.allowedTicketProviders());
 
         return Promise.all(promises);
     }
 };
 
 let builders = {
+    allowedTicketProviders: function(){
+        let allowedTicketProviders = [];
+
+        for (let index = 0; index < LIMIT; index++) {
+            let Provider = faker.random.number({min: 1000000000, max: 9999999999}).toString();
+            let providerName = faker.company.companyName();
+            let providerColor = faker.internet.color();
+            let providerLogo = faker.company.companySuffix();
+            let providerTimeZone = faker.address.city();
+
+            allowedTicketProviders.push({Provider, providerName, providerColor, providerLogo, providerTimeZone});
+        }
+
+        const filename = dbDir + '/allowedTicketProvidersDb.json';
+        return writeFile(filename, allowedTicketProviders);
+    },
+
     validCardTickets: function () {
         let validCardTickets = [];
 
@@ -48,21 +65,8 @@ let builders = {
             });
         }
         const filename = dbDir + '/validCardTicketsDb.json';
-        try{
-            fs.unlinkSync(filename);
-        }catch (e) {
-            console.log(e);
-        }
 
-        const writeFile = util.promisify(fs.writeFile);
-        return writeFile(filename, JSON.stringify([...validCardTickets]));
-    },
-    anotherApi: function () {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve("foo");
-            }, 1000);
-        });
+        return writeFile(filename, validCardTickets);
     }
 };
 
@@ -70,4 +74,15 @@ function init(){
     if (!fs.existsSync(dbDir)){
         fs.mkdirSync(dbDir);
     }
+}
+
+function writeFile(filename, data){
+    try{
+        fs.unlinkSync(filename);
+    }catch (e) {
+        console.log(e.message);
+    }
+
+    const writeFile = util.promisify(fs.writeFile);
+    return writeFile(filename, JSON.stringify([...data]));
 }

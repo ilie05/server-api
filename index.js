@@ -5,35 +5,37 @@ let app = express();
 app.use(express.json());
 const PORT = process.env.PORT || 5000;
 
-let fileContent;
-
+let validCardTickets, allowedTicketProviders;
 apiReader.readFile('validCardTicketsDb').then(data => {
-  fileContent = JSON.parse(data);
+  validCardTickets = JSON.parse(data);
 });
 
+apiReader.readFile('allowedTicketProvidersDb').then(data => {
+  allowedTicketProviders = JSON.parse(data);
+});
+
+
 app.get('/', function (req, res) {
+  apiReader.readFile('validCardTicketsDb').then(data => {
+    fileContent = JSON.parse(data);
+  });
   console.log("Got a GET request for the homepage");
-  res.json(fileContent);
+  res.json(validCardTicketsDb);
 });
 
 app.post('/validCardTickets', function (req, res) {
-  console.log("Got a POST request for the homepage");
   let {cardSRN, Provider} = req.body;
-  let arr = fileContent.filter(obj => obj.cardSRN == cardSRN);
+  let arr = validCardTickets.filter(obj => obj.cardSRN == cardSRN);
   res.json(arr);
 });
 
-// This responds a GET request for the /list_user page.
-app.get('/list_user', function (req, res) {
-  console.log("Got a GET request for /list_user");
-  res.send('Page Listing');
+app.post('/allowedTicketProviders', function (req, res) {
+  let {cardSRN, Provider} = req.body;
+  let arr = allowedTicketProviders.filter(obj => obj.Provider == Provider);
+  res.json(arr);
 });
 
-// This responds a GET request for abcd, abxcd, ab123cd, and so on
-app.get('/ab*cd', function(req, res) {
-  console.log("Got a GET request for /ab*cd");
-  res.send('Page Pattern Match');
-});
+
 
 let server = app.listen(PORT, function () {
   let host = server.address().address;
