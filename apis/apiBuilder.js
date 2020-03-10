@@ -52,7 +52,7 @@ let builders = {
         try{
             fs.unlinkSync(filename);
         }catch (e) {
-            //console.log(e);
+            console.log(e);
         }
 
         const writeFile = util.promisify(fs.writeFile);
@@ -72,5 +72,3 @@ function init(){
         fs.mkdirSync(dbDir);
     }
 }
-
-// module.exports.createDb();

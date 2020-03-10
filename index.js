@@ -1,17 +1,11 @@
 let express = require('express');
-let apiBuilder = require('./apis/apiBuilder');
 let apiReader = require('./apis/apiReader');
 
 let app = express();
 const PORT = process.env.PORT || 5000;
 
 let fileContent;
-// apiBuilder.createDb().then(() => {
-//   apiReader.readFile('validCardTicketsDb').then(data => {
-//     fileContent = JSON.parse(data);
-//   })
-//     .catch(error => console.log(error));
-// });
+
 
 apiReader.readFile('validCardTicketsDb').then(data => {
   fileContent = JSON.parse(data);
