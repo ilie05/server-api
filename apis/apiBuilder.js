@@ -13,12 +13,30 @@ module.exports = {
 
         promises.push(builders.validCardTickets());
         promises.push(builders.allowedTicketProviders());
+        promises.push(builders.availableTickets());
 
         return Promise.all(promises);
     }
 };
 
 let builders = {
+    availableTickets: function(){
+        let availableTickets = [];
+
+        for (let index = 0; index < LIMIT; index++) {
+            let TicketProvider = faker.random.number({min: 1000000000, max: 9999999999}).toString();
+            let timeValidity = faker.hacker.noun();
+            let spaceValidity = faker.random.number({min: 1000000000, max: 9999999999}).toString();
+            let tariff = faker.random.number({min: 5, max: 200});
+            let tariffName = faker.random.word();
+
+            availableTickets.push({TicketProvider, timeValidity, spaceValidity, tariff, tariffName});
+        }
+
+        const filename = dbDir + '/availableTicketsDb.json';
+        return writeFile(filename, availableTickets);
+    },
+
     allowedTicketProviders: function(){
         let allowedTicketProviders = [];
 
