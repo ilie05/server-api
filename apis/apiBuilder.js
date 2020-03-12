@@ -13,15 +13,15 @@ module.exports = {
 
         promises.push(builders.validCardTickets());
         promises.push(builders.allowedTicketProviders());
-        promises.push(builders.availableTickets());
+        promises.push(builders.availableTariffs());
 
         return Promise.all(promises);
     }
 };
 
 let builders = {
-    availableTickets: function(){
-        let availableTickets = [];
+    availableTariffs: function(){
+        let availableTariffs = [];
 
         for (let index = 0; index < LIMIT; index++) {
             let TicketProvider = faker.random.number({min: 1000000000, max: 9999999999}).toString();
@@ -30,11 +30,11 @@ let builders = {
             let tariff = faker.random.number({min: 5, max: 200});
             let tariffName = faker.random.word();
 
-            availableTickets.push({TicketProvider, timeValidity, spaceValidity, tariff, tariffName});
+            availableTariffs.push({TicketProvider, timeValidity, spaceValidity, tariff, tariffName});
         }
 
-        const filename = dbDir + '/availableTicketsDb.json';
-        return writeFile(filename, availableTickets);
+        const filename = dbDir + '/availableTariffsDb.json';
+        return writeFile(filename, availableTariffs);
     },
 
     allowedTicketProviders: function(){

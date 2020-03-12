@@ -5,7 +5,7 @@ let app = express();
 app.use(express.json());
 const PORT = process.env.PORT || 5000;
 
-let validCardTickets, allowedTicketProviders, availableTickets;
+let validCardTickets, allowedTicketProviders, availableTariffs;
 apiReader.readFile('validCardTicketsDb').then(data => {
   validCardTickets = JSON.parse(data);
 });
@@ -14,8 +14,8 @@ apiReader.readFile('allowedTicketProvidersDb').then(data => {
   allowedTicketProviders = JSON.parse(data);
 });
 
-apiReader.readFile('availableTicketsDb').then(data => {
-    availableTickets = JSON.parse(data);
+apiReader.readFile('availableTariffsDb').then(data => {
+  availableTariffs = JSON.parse(data);
 });
 
 
@@ -37,9 +37,9 @@ app.post('/allowedTicketProviders', function (req, res) {
   res.json(arr);
 });
 
-app.post('/availableTickets', function (req, res) {
+app.post('/availableTariffs', function (req, res) {
   let {cardSRN, Provider, TicketProvider} = req.body;
-  let arr = availableTickets.filter(obj => obj.TicketProvider == TicketProvider);
+  let arr = availableTariffs.filter(obj => obj.TicketProvider == TicketProvider);
   res.json(arr);
 });
 
