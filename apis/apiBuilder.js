@@ -15,12 +15,34 @@ module.exports = {
         promises.push(builders.allowedTicketProviders());
         promises.push(builders.availableTariffs());
         promises.push(builders.saleTickets());
+        promises.push(builders.orderTicket());
 
         return Promise.all(promises);
     }
 };
 
 let builders = {
+    orderTicket: function(){
+        let orderTicket = [];
+        for (let index = 0; index < LIMIT; index++) {
+            let cardSRN = faker.random.number({min: 1000000000, max: 9999999999}).toString();
+            let tariff = faker.random.number({min: 5, max: 200});
+            let tariffName = faker.random.word();
+            let ticketProvider = faker.random.number();
+            let ticketType = faker.random.number({min: 10, max: 99});
+            let validFrom = new Date(faker.date.past()).getTime() / 1000 | 0;
+            let validTo = new Date(faker.date.future()).getTime() / 1000 | 0;
+            let zone = faker.random.number({min: 0, max: 99});
+            let zoneName = faker.address.streetName();
+            let status = faker.random.number({min: 0, max: 9});
+            let Price = faker.random.number({min: 0, max: 10000});
+
+            orderTicket.push({cardSRN, tariff, tariffName, ticketProvider, ticketType, validFrom, validTo, zone, zoneName, status, Price});
+        }
+        const filename = dbDir + '/orderTicketDb.json';
+        return writeFile(filename, orderTicket);
+    },
+
     saleTickets: function(){
         let saleTickets = [];
         for (let index = 0; index < LIMIT; index++) {
