@@ -20,12 +20,28 @@ module.exports = {
         promises.push(builders.cancelOrderTicket());
         promises.push(builders.payOrderTicket());
         promises.push(builders.paymentGateway());
+        promises.push(builders.changePurseOnCard());
 
         return Promise.all(promises);
     }
 };
 
 let builders = {
+    changePurseOnCard: function(){
+        let changePurseOnCard = [];
+        for (let index = 0; index < LIMIT; index++) {
+            let cardSRN = faker.random.number({min: 1000000000, max: 9999999999}).toString();
+            let Order = faker.random.number({min: 1000000000, max: 9999999999});
+            let OperationId = faker.random.number({min: 1000000000, max: 9999999999});
+            let BalanceBefore =  faker.random.number({min: 1, max: 100000});
+            let BalanceAfter =  faker.random.number({min: 0, max: BalanceBefore});
+
+            changePurseOnCard.push({cardSRN, Order, "PurseResponse": { OperationId, BalanceBefore, BalanceAfter }});
+        }
+        const filename = dbDir + '/changePurseOnCardDb.json';
+        return writeFile(filename, changePurseOnCard);
+    },
+
     paymentGateway: function(){
         let paymentGateway = [];
         for (let index = 0; index < LIMIT; index++) {
