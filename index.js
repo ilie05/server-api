@@ -27,8 +27,8 @@ apiReader.readFile('orderTicketDb').then(data => {
   orderTicket = JSON.parse(data);
 });
 
-apiReader.readFile('changeOrderTicketDb').then(data => {
-  changeOrderTicket = JSON.parse(data);
+apiReader.readFile('cancelOrderTicketDb').then(data => {
+  cancelOrderTicket = JSON.parse(data);
 });
 
 
