@@ -19,12 +19,28 @@ module.exports = {
         promises.push(builders.orderTicket());
         promises.push(builders.cancelOrderTicket());
         promises.push(builders.payOrderTicket());
+        promises.push(builders.paymentGateway());
 
         return Promise.all(promises);
     }
 };
 
 let builders = {
+    paymentGateway: function(){
+        let paymentGateway = [];
+        for (let index = 0; index < LIMIT; index++) {
+            let RedirectPath  = "/" + faker.system.fileName();
+            let Parameters = {
+                "EshopId": faker.random.number({min: 0, max: 100}),
+                "Key": faker.random.number({min: 10000, max: 99999})
+            };
+
+            paymentGateway.push({RedirectPath, Parameters});
+        }
+        const filename = dbDir + '/paymentGatewayDb.json';
+        return writeFile(filename, paymentGateway);
+    },
+
     payOrderTicket: function(){
         let payOrderTicketCard = [];
         let payOrderTicketPurse = [];

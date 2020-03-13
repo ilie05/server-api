@@ -6,6 +6,7 @@ app.use(express.json());
 const PORT = process.env.PORT || 5000;
 
 let validCardTickets, allowedTicketProviders, availableTariffs, saleTickets, orderTicket, cancelOrderTicket, payOrderTicket;
+let paymentGateway;
 
 apiReader.readFile('validCardTicketsDb').then(data => {
   validCardTickets = JSON.parse(data);
@@ -33,6 +34,10 @@ apiReader.readFile('cancelOrderTicketDb').then(data => {
 
 apiReader.readFile('payOrderTicketDb').then(data => {
   payOrderTicket = JSON.parse(data)[0];  //  [{payOrderTicketCard, payOrderTicketPurse}]; take first element
+});
+
+apiReader.readFile('paymentGatewayDb').then(data => {
+  paymentGateway = JSON.parse(data);
 });
 
 
@@ -94,6 +99,12 @@ app.post('/payOrderTicket', function (req, res) {
   } else if(PaymentType === 1){ //payment of type ECARD
     arr = payOrderTicket.payOrderTicketCard.filter(obj => obj.cardSRN == cardSRN);
   }
+  res.json(arr);
+});
+
+app.post('/paymentGateway', function (req, res) {
+  let {cardSRN, Provider, TicketProvider, Order} = req.body;
+  let arr = paymentGateway;
   res.json(arr);
 });
 
