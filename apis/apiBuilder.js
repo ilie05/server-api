@@ -14,34 +14,45 @@ module.exports = {
         promises.push(builders.validCardTickets());
         promises.push(builders.allowedTicketProviders());
         promises.push(builders.availableTariffs());
+        promises.push(builders.saleTickets());
 
         return Promise.all(promises);
     }
 };
 
 let builders = {
+    saleTickets: function(){
+        let saleTickets = [];
+        for (let index = 0; index < LIMIT; index++) {
+            let cardSRN = faker.random.number({min: 1000000000, max: 9999999999}).toString();
+            let Order = faker.random.number({min: 1000000000, max: 9999999999});
+            let Price = faker.random.number({min: 0, max: 10000});
+
+            saleTickets.push({cardSRN, Order, Price});
+        }
+        const filename = dbDir + '/saleTicketsDb.json';
+        return writeFile(filename, saleTickets);
+    },
+
     availableTariffs: function(){
         let availableTariffs = [];
-
         for (let index = 0; index < LIMIT; index++) {
-            let TicketProvider = faker.random.number({min: 1000000000, max: 9999999999}).toString();
+            let TicketProvider = faker.random.number({min: 1000000000, max: 9999999999});
             let timeValidity = faker.hacker.noun();
-            let spaceValidity = faker.random.number({min: 1000000000, max: 9999999999}).toString();
+            let spaceValidity = faker.random.number({min: 1000000000, max: 9999999999});
             let tariff = faker.random.number({min: 5, max: 200});
             let tariffName = faker.random.word();
 
             availableTariffs.push({TicketProvider, timeValidity, spaceValidity, tariff, tariffName});
         }
-
         const filename = dbDir + '/availableTariffsDb.json';
         return writeFile(filename, availableTariffs);
     },
 
     allowedTicketProviders: function(){
         let allowedTicketProviders = [];
-
         for (let index = 0; index < LIMIT; index++) {
-            let Provider = faker.random.number({min: 1000000000, max: 9999999999}).toString();
+            let Provider = faker.random.number({min: 1000000000, max: 9999999999});
             let providerName = faker.company.companyName();
             let providerColor = faker.internet.color();
             let providerLogo = faker.company.companySuffix();
@@ -49,16 +60,14 @@ let builders = {
 
             allowedTicketProviders.push({Provider, providerName, providerColor, providerLogo, providerTimeZone});
         }
-
         const filename = dbDir + '/allowedTicketProvidersDb.json';
         return writeFile(filename, allowedTicketProviders);
     },
 
     validCardTickets: function () {
         let validCardTickets = [];
-
         for (let index = 0; index < LIMIT; index++) {
-            let cardSRN = faker.random.number({min: 1000000000, max: 9999999999}).toString();  //cardSRN 10 number string
+            let cardSRN = faker.random.number({min: 1000000000, max: 9999999999}).toString();
             let tariff = faker.random.number({min: 5, max: 200});
             let tariffName = faker.random.word();
             let ticketProvider = faker.random.number();
@@ -83,7 +92,6 @@ let builders = {
             });
         }
         const filename = dbDir + '/validCardTicketsDb.json';
-
         return writeFile(filename, validCardTickets);
     }
 };
@@ -100,7 +108,6 @@ function writeFile(filename, data){
     }catch (e) {
         console.log(e.message);
     }
-
     const writeFile = util.promisify(fs.writeFile);
     return writeFile(filename, JSON.stringify([...data]));
 }
