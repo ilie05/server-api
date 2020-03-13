@@ -11,6 +11,7 @@
     "new-dataset": "node generateDataset.js"
   },
   "dependencies": {
+    "casual": "^1.6.2",
     "express": "^4.15.2",
     "faker": "^4.1.0"
   },

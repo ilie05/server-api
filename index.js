@@ -5,7 +5,7 @@ let app = express();
 app.use(express.json());
 const PORT = process.env.PORT || 5000;
 
-let validCardTickets, allowedTicketProviders, availableTariffs, saleTickets, orderTicket, cancelOrderTicket;
+let validCardTickets, allowedTicketProviders, availableTariffs, saleTickets, orderTicket, cancelOrderTicket, payOrderTicket;
 
 apiReader.readFile('validCardTicketsDb').then(data => {
   validCardTickets = JSON.parse(data);
@@ -29,6 +29,10 @@ apiReader.readFile('orderTicketDb').then(data => {
 
 apiReader.readFile('cancelOrderTicketDb').then(data => {
   cancelOrderTicket = JSON.parse(data);
+});
+
+apiReader.readFile('payOrderTicketDb').then(data => {
+  payOrderTicket = JSON.parse(data)[0];  //  [{payOrderTicketCard, payOrderTicketPurse}]; take first element
 });
 
 
@@ -78,6 +82,18 @@ app.post('/changeOrderTicket', function (req, res) {
 app.post('/cancelOrderTicket', function (req, res) {
   let {cardSRN, Provider, TicketProvider, Order, Ticket} = req.body;
   let arr = cancelOrderTicket.filter(obj => obj.cardSRN == cardSRN);
+  res.json(arr);
+});
+
+app.post('/payOrderTicket', function (req, res) {
+  let {cardSRN, Provider, TicketProvider, Order, PaymentType} = req.body;
+  let arr = {};
+  if(PaymentType === 0){ //payment of type purse
+    console.log(payOrderTicket.payOrderTicketPurse);
+    arr = payOrderTicket.payOrderTicketPurse.filter(obj => obj.cardSRN == cardSRN);
+  } else if(PaymentType === 1){ //payment of type ECARD
+    arr = payOrderTicket.payOrderTicketCard.filter(obj => obj.cardSRN == cardSRN);
+  }
   res.json(arr);
 });
 

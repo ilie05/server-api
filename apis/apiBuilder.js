@@ -1,6 +1,7 @@
 let fs = require('fs');
 const util = require('util');
 let faker = require('faker');
+let casual = require('casual');
 
 const LIMIT = 1000;
 const dbDir = 'db';
@@ -17,12 +18,42 @@ module.exports = {
         promises.push(builders.saleTickets());
         promises.push(builders.orderTicket());
         promises.push(builders.cancelOrderTicket());
+        promises.push(builders.payOrderTicket());
 
         return Promise.all(promises);
     }
 };
 
 let builders = {
+    payOrderTicket: function(){
+        let payOrderTicketCard = [];
+        let payOrderTicketPurse = [];
+        for (let index = 0; index < LIMIT; index++) {
+            let cardSRN = faker.random.number({min: 1000000000, max: 9999999999}).toString();
+            let Order = faker.random.number({min: 1000000000, max: 9999999999});
+            let Pay = faker.random.boolean();
+
+            let OperationId = faker.random.number({min: 1000000000, max: 9999999999});
+            let BalanceBefore =  faker.random.number({min: 1, max: 100000});
+            let BalanceAfter =  faker.random.number({min: 0, max: BalanceBefore});
+
+            let PostId = faker.random.number({min: 1000000000, max: 9999999999});
+            let Tid = faker.random.number({min: 1000000000, max: 9999999999});
+            let Mid = faker.random.number({min: 1000000000, max: 9999999999});
+            let CardNumber = casual.card_number();
+            let CardSetName = casual.card_type;
+            let Currency = casual.currency_symbol;
+            let ReturnCode = faker.random.number({min: 0, max: 100});
+            let Amount = faker.finance.amount();
+            let PosTransactionId = faker.random.number({min: 1000000000, max: 9999999999});
+
+            payOrderTicketPurse.push({cardSRN, Order, Pay, "TransactionInformation": { OperationId, BalanceBefore, BalanceAfter }});
+            payOrderTicketCard.push({cardSRN, Order, Pay, "TransactionInformation": { PostId, Tid, Mid, CardNumber,CardSetName, Currency, ReturnCode, Amount, PosTransactionId }});
+        }
+        const filename = dbDir + '/payOrderTicketDb.json';
+        return writeFile(filename, [{payOrderTicketCard, payOrderTicketPurse}]);
+    },
+
     cancelOrderTicket: function(){
         let cancelOrderTicket = [];
         for (let index = 0; index < LIMIT; index++) {
