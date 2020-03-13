@@ -16,12 +16,26 @@ module.exports = {
         promises.push(builders.availableTariffs());
         promises.push(builders.saleTickets());
         promises.push(builders.orderTicket());
+        promises.push(builders.changeOrderTicket());
 
         return Promise.all(promises);
     }
 };
 
 let builders = {
+    changeOrderTicket: function(){
+        let changeOrderTicket = [];
+        for (let index = 0; index < LIMIT; index++) {
+            let cardSRN = faker.random.number({min: 1000000000, max: 9999999999}).toString();
+            let Order = faker.random.number({min: 1000000000, max: 9999999999});
+            let Cancel = faker.random.boolean();
+
+            changeOrderTicket.push({cardSRN, Order, Cancel});
+        }
+        const filename = dbDir + '/changeOrderTicketDb.json';
+        return writeFile(filename, changeOrderTicket);
+    },
+
     orderTicket: function(){
         let orderTicket = [];
         for (let index = 0; index < LIMIT; index++) {
