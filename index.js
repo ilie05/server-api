@@ -64,6 +64,13 @@ app.post('/orderTicket', function (req, res) {
   res.json(arr);
 });
 
+// use saleTickets db file
+app.post('/changeOrderTicket', function (req, res) {
+  let {cardSRN, Provider, TicketProvider, Order, Ticket} = req.body;
+  let arr = saleTickets.filter(obj => obj.cardSRN == cardSRN);
+  res.json(arr);
+});
+
 
 
 let server = app.listen(PORT, function () {
