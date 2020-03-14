@@ -13,6 +13,7 @@ module.exports = {
 
         promises.push(this.buildCardInterface());
         promises.push(this.buildCardPrimaryData());
+        promises.push(this.buildTicketPrimaryData());
 
         return Promise.all(promises);
     },
@@ -35,9 +36,13 @@ module.exports = {
 
     buildCardPrimaryData: function () {
         let promises = [];
-
         promises.push(cardPrimaryDataBuild.customerProfiles());
+        return Promise.all(promises);
+    },
 
+    buildTicketPrimaryData: function () {
+        let promises = [];
+        promises.push(ticketPrimaryDataBuild.ticketData());
         return Promise.all(promises);
     }
 };
@@ -260,6 +265,30 @@ let cardPrimaryDataBuild = {
         }
         const filename = dbDir + '/customerProfilesDb.json';
         return writeFile(filename, customerProfiles);
+    }
+};
+
+let ticketPrimaryDataBuild = {
+    ticketData: function () {
+        let ticketData = [];
+        for (let index = 0; index < LIMIT; index++) {
+            let Id = faker.random.number({min: 1000000000, max: 9999999999});
+            let Name = casual.name;
+            let Abbreviation = casual.currency_code;
+            let ValueFrom = faker.random.number({min: 0, max: 5});
+            let ValueTo = faker.random.number({min: 0, max: 5});
+            let ValueText = casual.word;
+            let GroupId = faker.random.number({min: 1000000000, max: 9999999999});
+            let GroupName = casual.word;
+            let SpaceFrom = faker.random.number({min: 0, max: 5});
+            let SpaceTo = faker.random.number({min: 0, max: 5});
+            let Value = faker.random.number({min: 100, max: 999});
+            let UnitId = faker.random.number({min: 1000000000, max: 9999999999});
+
+            ticketData.push({Id, Name, Abbreviation, ValueFrom, ValueTo, ValueText, GroupId, GroupName, SpaceFrom, SpaceTo, Value, UnitId});
+        }
+        const filename = dbDir + '/ticketDataDb.json';
+        return writeFile(filename, ticketData);
     }
 };
 

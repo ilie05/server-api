@@ -6,7 +6,9 @@ app.use(express.json());
 const PORT = process.env.PORT || 5000;
 
 let cardInfo, validCardTickets, allowedTicketProviders, availableTariffs, saleTickets, orderTicket, cancelOrderTicket, payOrderTicket;
-let paymentGateway, changePurseOnCard,customerProfiles,cardSubType, statuses, paymentType;
+let paymentGateway, changePurseOnCard, customerProfiles, cardSubType, statuses, paymentType, ticketData, currency, spaceValidity, timeValidity;
+
+// read data from files for Card Interface
 
 apiReader.readFile('cardInfoDb').then(data => {
   cardInfo = JSON.parse(data);
@@ -48,6 +50,8 @@ apiReader.readFile('changePurseOnCardDb').then(data => {
   changePurseOnCard = JSON.parse(data);
 });
 
+// read data from files for Card Primary data
+
 apiReader.readFile('customerProfilesDb').then(data => {
   let arr = JSON.parse(data);
   customerProfiles = arr.map((item) => {
@@ -67,11 +71,30 @@ apiReader.readFile('customerProfilesDb').then(data => {
   });
 });
 
+// read data from files for Ticket Primary data
 
-app.get('/', function (req, res) {
-  console.log("Got a GET request for the homepage");
-  res.json(validCardTickets);
+apiReader.readFile('ticketDataDb').then(data => {
+  let arr = JSON.parse(data);
+  ticketData = arr.map((item) => {              // this array will be used for getLanguage, GetTicketType, getCostumerProfile
+      return { 'Id': item.Id, 'Name': item.Name };  // getStartValidity, getTimeUnit
+  });
+
+  currency = arr.map((item) => {
+      return { 'Id': item.Id, 'Name': item.Name, 'Abbreviation': item.Abbreviation };
+  });
+
+  spaceValidity = arr.map((item) => {
+      return { 'Id': item.Id, 'Name': item.Name, 'ValueFrom': item.ValueFrom, 'ValueTo': item.ValueTo, 'ValueText': item.ValueText,
+        'GroupId': item.GroupId, 'GroupName': item.Name, 'SpaceFrom': item.SpaceFrom, 'SpaceTo': item.SpaceTo };
+  });
+
+  timeValidity = arr.map((item) => {
+    return { 'Id': item.Id, 'Value': item.Value, 'UnitId': item.UnitId };
+  });
+
 });
+
+// apis for Card Interface
 
 app.post('/cardInfo', function (req, res) {
   let {cardSRN, Provider} = req.body;
@@ -147,6 +170,8 @@ app.post('/changePurseOnCard', function (req, res) {
   res.json(arr);
 });
 
+// apis for Card Primary Data
+
 app.post('/customerProfiles', function (req, res) {
   let { Provider } = req.body;
   // let arr = customerProfiles.filter(obj => obj.cardSRN == cardSRN);
@@ -172,6 +197,58 @@ app.post('/paymentType', function (req, res) {
   let { Provider } = req.body;
   // let arr = paymentType.filter(obj => obj.cardSRN == cardSRN);
   let arr = paymentType;
+  res.json(arr);
+});
+
+// apis for  Ticket Primary Data
+
+app.post('/languages', function (req, res) {
+  let { Id, TicketProvider } = req.body;
+  let arr = ticketData.filter(obj => obj.Id == Id);
+  res.json(arr);
+});
+
+app.post('/ticketType', function (req, res) {
+  let { Id, TicketProvider } = req.body;
+  let arr = ticketData.filter(obj => obj.Id == Id);
+  res.json(arr);
+});
+
+app.post('/customerProfile', function (req, res) {
+  let { TicketProvider } = req.body;
+  //let arr = ticketData.filter(obj => obj.Id == Id);
+  let arr = ticketData;
+  res.json(arr);
+});
+
+app.post('/startValidity', function (req, res) {
+  let { TicketProvider } = req.body;
+  //let arr = ticketData.filter(obj => obj.Id == Id);
+  let arr = ticketData;
+  res.json(arr);
+});
+
+app.post('/timeUnit', function (req, res) {
+  let { Id } = req.body;
+  let arr = ticketData.filter(obj => obj.Id == Id);
+  res.json(arr);
+});
+
+app.post('/currency', function (req, res) {
+  let { Id, TicketProvider } = req.body;
+  let arr = currency.filter(obj => obj.Id == Id);
+  res.json(arr);
+});
+
+app.post('/spaceValidity', function (req, res) {
+  let { Id, TicketProvider } = req.body;
+  let arr = spaceValidity.filter(obj => obj.Id == Id);
+  res.json(arr);
+});
+
+app.post('/timeValidity', function (req, res) {
+  let { Id, TicketProvider } = req.body;
+  let arr = timeValidity.filter(obj => obj.Id == Id);
   res.json(arr);
 });
 
