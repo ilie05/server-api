@@ -6,7 +6,7 @@ app.use(express.json());
 const PORT = process.env.PORT || 5000;
 
 let cardInfo, validCardTickets, allowedTicketProviders, availableTariffs, saleTickets, orderTicket, cancelOrderTicket, payOrderTicket;
-let paymentGateway, changePurseOnCard,customerProfiles;
+let paymentGateway, changePurseOnCard,customerProfiles,cardSubType;
 
 apiReader.readFile('cardInfoDb').then(data => {
   cardInfo = JSON.parse(data);
@@ -49,7 +49,14 @@ apiReader.readFile('changePurseOnCardDb').then(data => {
 });
 
 apiReader.readFile('customerProfilesDb').then(data => {
-  customerProfiles = JSON.parse(data);
+  let arr = JSON.parse(data);
+  customerProfiles = arr.map((item) => {
+      return { 'Id': item.Id, 'ValidTo': item.ValidTo, 'CardProvider': item.CardProvider, 'Template': item.Template, 'Name': item.Name };
+  });
+
+  cardSubType = arr.map((item) => {
+      return { 'Id': item.Id, 'ValidTo': item.ValidTo, 'CardProvider': item.CardProvider, 'CustomerProfile': item.CustomerProfile, 'Name': item.Name };
+  });
 });
 
 
@@ -136,6 +143,13 @@ app.post('/customerProfiles', function (req, res) {
   let { Provider } = req.body;
   // let arr = customerProfiles.filter(obj => obj.cardSRN == cardSRN);
   let arr = customerProfiles;
+  res.json(arr);
+});
+
+app.post('/cardSubType', function (req, res) {
+  let { Provider } = req.body;
+  // let arr = customerProfiles.filter(obj => obj.cardSRN == cardSRN);
+  let arr = cardSubType;
   res.json(arr);
 });
 

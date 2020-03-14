@@ -253,9 +253,10 @@ let cardPrimaryDataBuild = {
             let ValidTo = new Date(faker.date.future()).getTime() / 1000 | 0;
             let CardProvider = faker.random.number({min: 10, max: 99});
             let Template = faker.random.number({min: 1000000000, max: 9999999999});
+            let CustomerProfile = faker.random.number({min: 1000000000, max: 9999999999});
             let Name = casual.name;
 
-            customerProfiles.push({Id, ValidTo, CardProvider, Template, Name});
+            customerProfiles.push({Id, ValidTo, CardProvider, CustomerProfile, Template, Name});
         }
         const filename = dbDir + '/customerProfilesDb.json';
         return writeFile(filename, customerProfiles);
