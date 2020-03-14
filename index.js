@@ -5,8 +5,12 @@ let app = express();
 app.use(express.json());
 const PORT = process.env.PORT || 5000;
 
-let validCardTickets, allowedTicketProviders, availableTariffs, saleTickets, orderTicket, cancelOrderTicket, payOrderTicket;
+let cardInfo, validCardTickets, allowedTicketProviders, availableTariffs, saleTickets, orderTicket, cancelOrderTicket, payOrderTicket;
 let paymentGateway, changePurseOnCard;
+
+apiReader.readFile('cardInfoDb').then(data => {
+  cardInfo = JSON.parse(data);
+});
 
 apiReader.readFile('validCardTicketsDb').then(data => {
   validCardTickets = JSON.parse(data);
@@ -46,9 +50,15 @@ apiReader.readFile('changePurseOnCardDb').then(data => {
 
 
 app.get('/', function (req, res) {
-
   console.log("Got a GET request for the homepage");
   res.json(validCardTickets);
+});
+
+app.post('/cardInfo', function (req, res) {
+  let {cardSRN, Provider} = req.body;
+  //let arr = cardInfo.filter(obj => obj.cardSRN == cardSRN);
+  let arr = cardInfo;
+  res.json(arr);
 });
 
 app.post('/validCardTickets', function (req, res) {

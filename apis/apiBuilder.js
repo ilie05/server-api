@@ -12,6 +12,7 @@ module.exports = {
 
         let promises = [];
 
+        promises.push(builders.cardInfo());
         promises.push(builders.validCardTickets());
         promises.push(builders.allowedTicketProviders());
         promises.push(builders.availableTariffs());
@@ -177,21 +178,55 @@ let builders = {
             let zoneName = faker.address.streetName();
             let status = faker.random.number({min: 0, max: 9});
 
-            validCardTickets.push({
-                cardSRN,
-                tariff,
-                tariffName,
-                ticketProvider,
-                ticketType,
-                validFrom,
-                validTo,
-                spaceValidity,
-                zoneName,
-                status
-            });
+            validCardTickets.push({cardSRN, tariff, tariffName, ticketProvider, ticketType, validFrom, validTo,
+                spaceValidity, zoneName, status});
         }
         const filename = dbDir + '/validCardTicketsDb.json';
         return writeFile(filename, validCardTickets);
+    },
+
+    cardInfo: function () {
+        let cardInfo = [];
+        for (let index = 0; index < LIMIT; index++) {
+            let cardName = casual.username;
+            let CustProfile = faker.random.number({min: 1000000000, max: 9999999999});
+            let CustProfileName = casual.username;
+            let CardSubType = faker.random.number({min: 10, max: 99});
+            let CardSubTypeName = casual.username;
+            let CardPublisher = faker.random.number({min: 10, max: 99});
+            let CardPublisherName = casual.username;
+            let CardProvider = faker.random.number({min: 10, max: 99});
+            let CardProviderName = casual.username;
+            let isValid = faker.random.boolean();
+            let isBlocked = faker.random.boolean();
+            let cardValidityDate = new Date(faker.date.future()).getTime() / 1000 | 0;
+            let discountValidityDate = new Date(faker.date.future()).getTime() / 1000 | 0;
+            let soldDate = new Date(faker.date.future()).getTime() / 1000 | 0;
+            let blockedDate = new Date(faker.date.future()).getTime() / 1000 | 0;
+            let purseValueInCents = Number(faker.finance.amount());
+            let lastPurseUpdateDate = new Date(faker.date.past()).getTime() / 1000 | 0;
+            let purseWaitingOperationsInCents = Number(faker.finance.amount());
+            let purseCurrencyCode = casual.currency_symbol;
+            let purseValidFrom = new Date(faker.date.past()).getTime() / 1000 | 0;
+            let purseValidTo = new Date(faker.date.future()).getTime() / 1000 | 0;
+            let purseActive = faker.random.boolean();
+            let ownerFirstName = faker.name.firstName();
+            let ownerLastName = faker.name.lastName();
+            let ownerEmail = faker.internet.email();
+            let ownerStreet = faker.name.firstName();
+            let ownerPostCode = faker.address.zipCode();
+            let ownerCity = faker.address.city();
+            let templateCode = faker.address.zipCode();
+            let ownerPersonalNumber = faker.random.number({min: 1000000000, max: 9999999999}).toString();
+
+            cardInfo.push({cardName, CustProfile, CustProfileName, CardSubType, CardSubTypeName, CardPublisher,
+                CardPublisherName, CardProvider, CardProviderName, isValid, isBlocked,cardValidityDate, discountValidityDate,
+                soldDate, blockedDate, purseValueInCents, lastPurseUpdateDate, purseWaitingOperationsInCents, purseCurrencyCode,
+                purseValidFrom, purseValidTo, purseActive, ownerFirstName, ownerLastName, ownerEmail, ownerStreet,
+                ownerPostCode, ownerCity, templateCode, ownerPersonalNumber});
+        }
+        const filename = dbDir + '/cardInfoDb.json';
+        return writeFile(filename, cardInfo);
     }
 };
 
