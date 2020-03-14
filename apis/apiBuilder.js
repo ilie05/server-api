@@ -9,25 +9,40 @@ const dbDir = 'db';
 module.exports = {
     createDb: function () {
         init();
-
         let promises = [];
 
-        promises.push(builders.cardInfo());
-        promises.push(builders.validCardTickets());
-        promises.push(builders.allowedTicketProviders());
-        promises.push(builders.availableTariffs());
-        promises.push(builders.saleTickets());
-        promises.push(builders.orderTicket());
-        promises.push(builders.cancelOrderTicket());
-        promises.push(builders.payOrderTicket());
-        promises.push(builders.paymentGateway());
-        promises.push(builders.changePurseOnCard());
+        promises.push(this.buildCardInterface());
+        promises.push(this.buildCardPrimaryData());
+
+        return Promise.all(promises);
+    },
+    buildCardInterface: function() {
+        let promises = [];
+
+        promises.push(cardInterfaceBuild.cardInfo());
+        promises.push(cardInterfaceBuild.validCardTickets());
+        promises.push(cardInterfaceBuild.allowedTicketProviders());
+        promises.push(cardInterfaceBuild.availableTariffs());
+        promises.push(cardInterfaceBuild.saleTickets());
+        promises.push(cardInterfaceBuild.orderTicket());
+        promises.push(cardInterfaceBuild.cancelOrderTicket());
+        promises.push(cardInterfaceBuild.payOrderTicket());
+        promises.push(cardInterfaceBuild.paymentGateway());
+        promises.push(cardInterfaceBuild.changePurseOnCard());
+
+        return Promise.all(promises);
+    },
+
+    buildCardPrimaryData: function () {
+        let promises = [];
+
+        promises.push(cardPrimaryDataBuild.customerProfiles());
 
         return Promise.all(promises);
     }
 };
 
-let builders = {
+let cardInterfaceBuild = {
     changePurseOnCard: function(){
         let changePurseOnCard = [];
         for (let index = 0; index < LIMIT; index++) {
@@ -227,6 +242,23 @@ let builders = {
         }
         const filename = dbDir + '/cardInfoDb.json';
         return writeFile(filename, cardInfo);
+    }
+};
+
+let cardPrimaryDataBuild = {
+    customerProfiles: function () {
+        let customerProfiles = [];
+        for (let index = 0; index < LIMIT; index++) {
+            let Id = faker.random.number({min: 1000000000, max: 9999999999});
+            let ValidTo = new Date(faker.date.future()).getTime() / 1000 | 0;
+            let CardProvider = faker.random.number({min: 10, max: 99});
+            let Template = faker.random.number({min: 1000000000, max: 9999999999});
+            let Name = casual.name;
+
+            customerProfiles.push({Id, ValidTo, CardProvider, Template, Name});
+        }
+        const filename = dbDir + '/customerProfilesDb.json';
+        return writeFile(filename, customerProfiles);
     }
 };
 

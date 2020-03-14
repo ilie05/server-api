@@ -6,7 +6,7 @@ app.use(express.json());
 const PORT = process.env.PORT || 5000;
 
 let cardInfo, validCardTickets, allowedTicketProviders, availableTariffs, saleTickets, orderTicket, cancelOrderTicket, payOrderTicket;
-let paymentGateway, changePurseOnCard;
+let paymentGateway, changePurseOnCard,customerProfiles;
 
 apiReader.readFile('cardInfoDb').then(data => {
   cardInfo = JSON.parse(data);
@@ -46,6 +46,10 @@ apiReader.readFile('paymentGatewayDb').then(data => {
 
 apiReader.readFile('changePurseOnCardDb').then(data => {
   changePurseOnCard = JSON.parse(data);
+});
+
+apiReader.readFile('customerProfilesDb').then(data => {
+  customerProfiles = JSON.parse(data);
 });
 
 
@@ -125,6 +129,13 @@ app.post('/paymentGateway', function (req, res) {
 app.post('/changePurseOnCard', function (req, res) {
   let {cardSRN, Provider, TicketProvider, Ticket, Value, Increment} = req.body;
   let arr = changePurseOnCard.filter(obj => obj.cardSRN == cardSRN);
+  res.json(arr);
+});
+
+app.post('/customerProfiles', function (req, res) {
+  let { Provider } = req.body;
+  // let arr = customerProfiles.filter(obj => obj.cardSRN == cardSRN);
+  let arr = customerProfiles;
   res.json(arr);
 });
 
